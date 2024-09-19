@@ -1,6 +1,7 @@
 import ProductList from '../../components/ProductList';
 import Login from '../../components/login';
 import RegisterForm from '../../components/RegisterForm';
+import LogoutButton from '../../components/Logout';
 
 
 function Home() {
@@ -10,6 +11,7 @@ function Home() {
         <ProductList />
         <Login />
         <RegisterForm />
+        <LogoutButton />
     </div>
   );
 }

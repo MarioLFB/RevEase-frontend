@@ -30,6 +30,24 @@ export const register = async (username, email, password) => {
     }
   };
   
-export const logout = () => {
-    localStorage.removeItem('token');
+
+  export const logout = async () => {
+    const token = localStorage.getItem('token');
+
+    if (!token) return;
+
+    try {
+        await api.post('/api/auth/logout/', {}, {
+            headers: {
+                Authorization: `Token ${token}`
+            }
+        });
+
+        localStorage.removeItem('token');
+        return { message: 'Logout done!' };
+
+    } catch (error) {
+        console.error('Error logging out:', error);
+        throw error;
+    }
 };
