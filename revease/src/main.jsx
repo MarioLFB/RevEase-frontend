@@ -1,8 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import Home from './containers/Home'
-import ProductList from './components/ProductList'
 
+import { login, register, logout } from './services/auth';
+
+// Exponha as funções de autenticação no console do navegador
+window.login = login;
+window.register = register;
+window.logout = logout;
 
 
 createRoot(document.getElementById('root')).render(

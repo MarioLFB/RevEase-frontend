@@ -1,4 +1,5 @@
 import ProductList from '../../components/ProductList';
+import Login from '../../components/login';
 
 
 function Home() {
@@ -6,6 +7,7 @@ function Home() {
     <div>
         <h1>Home</h1>
         <ProductList />
+        <Login />
     </div>
   );
 }
