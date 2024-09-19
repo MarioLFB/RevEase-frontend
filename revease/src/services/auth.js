@@ -18,7 +18,7 @@ export const login = async (username, password) => {
 
 export const register = async (username, email, password) => {
     try {
-      const response = await api.post('auth/register/', {
+      const response = await api.post('api/auth/register/', {
         username,
         email,
         password,

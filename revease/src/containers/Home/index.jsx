@@ -1,5 +1,6 @@
 import ProductList from '../../components/ProductList';
 import Login from '../../components/login';
+import RegisterForm from '../../components/RegisterForm';
 
 
 function Home() {
@@ -8,6 +9,7 @@ function Home() {
         <h1>Home</h1>
         <ProductList />
         <Login />
+        <RegisterForm />
     </div>
   );
 }
