@@ -9,7 +9,6 @@ function Home() {
         <h1>Home</h1>
         <ProductList />
         <Login />
-        <RegisterForm />
         <LogoutButton />
     </div>
   );
