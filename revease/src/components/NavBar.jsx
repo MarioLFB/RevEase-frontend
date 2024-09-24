@@ -1,5 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
+import Login from './login';
+import LogoutButton from './logout';
 
 function Navigation() {
   return (
@@ -7,6 +9,8 @@ function Navigation() {
       <Container>
         <Navbar.Brand href="#home">
           React Bootstrap
+          <Login />
+          <LogoutButton />
         </Navbar.Brand>
       </Container>
     </Navbar>

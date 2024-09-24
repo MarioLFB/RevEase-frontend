@@ -1,6 +1,4 @@
 import ProductList from '../../components/ProductList';
-import Login from '../../components/login';
-import LogoutButton from '../../components/Logout';
 
 
 function Home() {
@@ -8,8 +6,6 @@ function Home() {
     <div>
         <h1>Home</h1>
         <ProductList />
-        <Login />
-        <LogoutButton />
     </div>
   );
 }
