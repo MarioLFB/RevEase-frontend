@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import ReviewForm from './ReviewForm';
+import ReviewList from './ReviewList';
 
 const ProductDetails = () => {
   const { id } = useParams();  
@@ -33,6 +35,8 @@ const ProductDetails = () => {
       <p><strong>Description:</strong> {product.description}</p>
       <p><strong>Category:</strong> {product.category}</p>
       <p><strong>Price:</strong> {product.price}</p>
+
+      <ReviewForm productId={product.id} setReviews={() => {}} />
     </div>
   );
 };
