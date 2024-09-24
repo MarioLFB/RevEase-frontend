@@ -1,33 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';  // Import Link for navigation
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('');  // Selected category
 
-  // Função para buscar produtos de todas as páginas
+  // Function to fetch all products from paginated API
   const fetchAllProducts = async () => {
-    let url = 'http://127.0.0.1:8000/api/products/';  // URL da primeira página
+    let url = 'http://127.0.0.1:8000/api/products/';  // URL of the first page
     let allProducts = [];
 
-    // Loop para buscar todos os produtos de todas as páginas
     while (url) {
       try {
         const response = await axios.get(url);
-        allProducts = allProducts.concat(response.data.results); 
-        url = response.data.next;
+        allProducts = allProducts.concat(response.data.results);  
+        url = response.data.next; 
       } catch (error) {
-        console.error('Erro ao carregar os produtos:', error);
+        setError('Error fetching products.');
         break;
       }
     }
 
     setProducts(allProducts); 
+    setLoading(false); 
   };
 
   useEffect(() => {
     fetchAllProducts();
   }, []);
+
 
   const handleCategoryClick = (category) => {
     setSelectedCategory(selectedCategory === category ? '' : category);
@@ -36,6 +40,9 @@ const ProductList = () => {
   const filteredProducts = products.filter(product => product.category === selectedCategory);
 
   const uniqueCategories = [...new Set(products.map(product => product.category))];
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <div>
@@ -52,7 +59,9 @@ const ProductList = () => {
           ) : (
             <ul>
               {filteredProducts.map(product => (
-                <li key={product.id}>{product.name}</li>
+                <li key={product.id}>
+                  <Link to={`/product/${product.id}`}>{product.name}</Link> 
+                </li>
               ))}
             </ul>
           )}
