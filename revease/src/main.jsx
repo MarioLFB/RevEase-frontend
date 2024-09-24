@@ -12,7 +12,6 @@ import Navigation from './components/NavBar';
 
 import { login, register, logout } from './services/auth';
 
-// Exponha as funções de autenticação no console do navegador
 window.login = login;
 window.register = register;
 window.logout = logout;
@@ -23,7 +22,7 @@ createRoot(document.getElementById('root')).render(
     <BrowserRouter>
       <Navigation />
       <Routes>
-        
+
         <Route path="/" element={<Home />} />
 
         <Route path="/register" element={<Register />} />
