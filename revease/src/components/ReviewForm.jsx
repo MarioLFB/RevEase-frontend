@@ -1,10 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const ReviewForm = ({ productId, setReviews }) => {
     const [content, setContent] = useState("");
     const [rating, setRating] = useState(1);
     const [error, setError] = useState(null);
+    const [hasReview, setHasReview] = useState(false);
+
+    useEffect(() => {
+        const checkUserReview = async () => {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                setError("User not authenticated");
+                return;
+            }
+
+            try {
+                const config = {
+                    headers: {
+                        Authorization: `Token ${token}`,
+                    },
+                };
+
+                const response = await axios.get("http://127.0.0.1:8000/api/reviews/", config);
+                const userReview = response.data.results.find(
+                    (review) => review.product === productId && review.author === localStorage.getItem("username")
+                );
+                if (userReview) {
+                    setHasReview(true);
+                }
+            } catch (error) {
+                console.error("Error checking user review:", error);
+                setError("Failed to check user review");
+            }
+        };
+
+        checkUserReview();
+    }, [productId]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -19,7 +52,7 @@ const ReviewForm = ({ productId, setReviews }) => {
         try {
             const config = {
                 headers: {
-                    Authorization: `Token ${token}`, 
+                    Authorization: `Token ${token}`,
                 },
             };
 
@@ -34,7 +67,7 @@ const ReviewForm = ({ productId, setReviews }) => {
             );
 
             setReviews((prevReviews) => [...prevReviews, response.data]);
-            setContent(""); 
+            setContent("");
             setRating(1);
             setError(null);
 
@@ -43,6 +76,10 @@ const ReviewForm = ({ productId, setReviews }) => {
             setError(error.response ? error.response.data : "An error occurred");
         }
     };
+
+    if (hasReview) {
+        return <p>Only one review allowed per user.</p>;
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -59,7 +96,7 @@ const ReviewForm = ({ productId, setReviews }) => {
                     required
                 />
             </div>
-            
+
             <div>
                 <label>Rating</label>
                 <input
