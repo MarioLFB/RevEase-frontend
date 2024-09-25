@@ -22,7 +22,7 @@ const RegisterForm = () => {
     try {
       const data = await register(formData.username, formData.email, formData.password);
       setMessage("Registration successful! You can now log in.");
-      // Faça algo após o registro, como redirecionar para o login
+  
     } catch (error) {
       setMessage("Registration failed. Try again.");
       console.error("Registration error:", error);
