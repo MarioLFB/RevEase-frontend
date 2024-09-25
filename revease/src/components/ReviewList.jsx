@@ -5,9 +5,9 @@ const ReviewList = ({ productId }) => {
     const [reviews, setReviews] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [editingReviewId, setEditingReviewId] = useState(null); 
-    const [editedContent, setEditedContent] = useState(""); 
-    const [editedRating, setEditedRating] = useState(1); 
+    const [editingReviewId, setEditingReviewId] = useState(null);
+    const [editedContent, setEditedContent] = useState("");
+    const [editedRating, setEditedRating] = useState(1);
 
     useEffect(() => {
         const fetchReviews = async () => {
@@ -39,7 +39,6 @@ const ReviewList = ({ productId }) => {
         }
     };
 
-
     const handleEdit = (review) => {
         setEditingReviewId(review.id);
         setEditedContent(review.content);
@@ -48,18 +47,34 @@ const ReviewList = ({ productId }) => {
 
     const handleUpdate = async (id) => {
         try {
-            await axios.put(`http://127.0.0.1:8000/api/reviews/${id}/`, {
-                content: editedContent,
-                rating: editedRating,
-            }, {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                setError("User not authenticated");
+                return;
+            }
+
+            const config = {
                 headers: {
-                    Authorization: `Token ${localStorage.getItem("token")}`,
+                    Authorization: `Token ${token}`,
+                    'Content-Type': 'application/json',
                 },
-            });
+            };
+
+            const response = await axios.put(
+                `http://127.0.0.1:8000/api/reviews/${id}/`,
+                {
+                    product: productId, 
+                    content: editedContent,
+                    rating: editedRating,
+                },
+                config
+            );
+
             setReviews(reviews.map(review => review.id === id ? { ...review, content: editedContent, rating: editedRating } : review));
-            setEditingReviewId(null);
+            setEditingReviewId(null); 
         } catch (error) {
-            console.error("Error updating review:", error);
+            console.error("Error updating review:", error.response.data || error);
+            setError("Failed to update review");
         }
     };
 
