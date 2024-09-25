@@ -7,7 +7,6 @@ const api = axios.create({
 export const login = async (username, password) => {
     try {
         const response = await api.post('api/auth/login/', {username, password});
-
         localStorage.setItem('token', response.data.token);
         return response.data;
     } catch (error) {
@@ -28,10 +27,9 @@ export const register = async (username, email, password) => {
       console.error('Error registering user', error);
       throw error;
     }
-  };
-  
+};
 
-  export const logout = async () => {
+export const logout = async () => {
     const token = localStorage.getItem('token');
 
     if (!token) return;
@@ -44,10 +42,11 @@ export const register = async (username, email, password) => {
         });
 
         localStorage.removeItem('token');
+        localStorage.removeItem('username');
         return { message: 'Logout done!' };
 
     } catch (error) {
         console.error('Error logging out:', error);
         throw error;
     }
-};
+}; 

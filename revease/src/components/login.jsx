@@ -1,21 +1,19 @@
 import React, { useEffect } from "react";
 import { login } from "../services/auth";
 
-const Login = () => {
+const Login = ({ setIsAuthenticated }) => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState(null);
-  const [isAuthenticated, setIsAuthenticated] = React.useState(false);
 
   useEffect(() => {
     const storedUsername = localStorage.getItem("username");
     const storedToken = localStorage.getItem("token");
 
     if (storedUsername && storedToken) {
-      setUsername(storedUsername);
       setIsAuthenticated(true);
     }
-  }, []);
+  }, [setIsAuthenticated]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,14 +30,6 @@ const Login = () => {
       setError("Error logging in. Check your credentials.");
     }
   };
-
-  if (isAuthenticated) {
-    return (
-      <div>
-        <h2>Welcome!, {username}!</h2>
-      </div>
-    );
-  }
 
   return (
     <div>
