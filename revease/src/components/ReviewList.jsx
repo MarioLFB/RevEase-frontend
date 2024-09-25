@@ -9,6 +9,9 @@ const ReviewList = ({ productId }) => {
     const [editedContent, setEditedContent] = useState("");
     const [editedRating, setEditedRating] = useState(1);
 
+    const isAuthenticated = !!localStorage.getItem("token");
+    const username = localStorage.getItem("username");
+
     useEffect(() => {
         const fetchReviews = async () => {
             try {
@@ -111,7 +114,8 @@ const ReviewList = ({ productId }) => {
                                     <p><strong>Rating:</strong> {review.rating}/5</p>
                                     <p><strong>Author:</strong> {review.author}</p>
                                     <p>{review.content}</p>
-                                    {review.author === localStorage.getItem("username") && (
+                                    
+                                    {isAuthenticated && review.author === username && (
                                         <div>
                                             <button onClick={() => handleEdit(review)}>Edit</button>
                                             <button onClick={() => handleDelete(review.id)}>Delete</button>
