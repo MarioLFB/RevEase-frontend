@@ -7,14 +7,13 @@ const ReviewForm = ({ productId, setReviews }) => {
     const [error, setError] = useState(null);
     const [hasReview, setHasReview] = useState(false);
 
+    const isAuthenticated = !!localStorage.getItem("token");
+
     useEffect(() => {
+        if (!isAuthenticated) return;
+
         const checkUserReview = async () => {
             const token = localStorage.getItem("token");
-
-            if (!token) {
-                setError("User not authenticated");
-                return;
-            }
 
             try {
                 const config = {
@@ -37,7 +36,7 @@ const ReviewForm = ({ productId, setReviews }) => {
         };
 
         checkUserReview();
-    }, [productId]);
+    }, [productId, isAuthenticated]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -56,7 +55,7 @@ const ReviewForm = ({ productId, setReviews }) => {
                 },
             };
 
-            const response = await axios.post(
+            await axios.post(
                 "http://127.0.0.1:8000/api/reviews/",
                 {
                     product: productId,
@@ -78,6 +77,10 @@ const ReviewForm = ({ productId, setReviews }) => {
             setError(error.response ? error.response.data : "An error occurred");
         }
     };
+
+    if (!isAuthenticated) {
+        return <p>You need to be logged in to submit a review.</p>;
+    }
 
     if (hasReview) {
         return <p>Only one review allowed per user.</p>;
