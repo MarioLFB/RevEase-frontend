@@ -5,7 +5,7 @@ const ReviewForm = ({ productId, setReviews }) => {
     const [content, setContent] = useState("");
     const [rating, setRating] = useState(1);
     const [error, setError] = useState(null);
-    const [hasReview, setHasReview] = useState(false);
+    const [hasReview, setHasReview] = useState(false); 
 
     useEffect(() => {
         const checkUserReview = async () => {
@@ -28,7 +28,7 @@ const ReviewForm = ({ productId, setReviews }) => {
                     (review) => review.product === productId && review.author === localStorage.getItem("username")
                 );
                 if (userReview) {
-                    setHasReview(true);
+                    setHasReview(true); 
                 }
             } catch (error) {
                 console.error("Error checking user review:", error);
@@ -71,6 +71,8 @@ const ReviewForm = ({ productId, setReviews }) => {
             setRating(1);
             setError(null);
 
+            setHasReview(true);
+
         } catch (error) {
             console.error("Error submitting review:", error.response.data);
             setError(error.response ? error.response.data : "An error occurred");
@@ -78,7 +80,7 @@ const ReviewForm = ({ productId, setReviews }) => {
     };
 
     if (hasReview) {
-        return <p>Only one review allowed per user.</p>;
+        return <p>Apenas um review permitido por usuário.</p>;
     }
 
     return (
