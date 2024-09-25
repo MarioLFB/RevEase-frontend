@@ -6,11 +6,10 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('');  // Selected category
+  const [selectedCategory, setSelectedCategory] = useState('');
 
-  // Function to fetch all products from paginated API
   const fetchAllProducts = async () => {
-    let url = 'http://127.0.0.1:8000/api/products/';  // URL of the first page
+    let url = 'http://127.0.0.1:8000/api/products/';
     let allProducts = [];
 
     while (url) {
