@@ -33,7 +33,7 @@ const ReviewList = ({ productId }) => {
                     Authorization: `Token ${localStorage.getItem("token")}`,
                 },
             });
-            setReviews(reviews.filter(review => review.id !== id));
+            window.location.reload();
         } catch (error) {
             console.error("Error deleting review:", error);
         }
@@ -60,10 +60,10 @@ const ReviewList = ({ productId }) => {
                 },
             };
 
-            const response = await axios.put(
+            await axios.put(
                 `http://127.0.0.1:8000/api/reviews/${id}/`,
                 {
-                    product: productId, 
+                    product: productId,
                     content: editedContent,
                     rating: editedRating,
                 },
@@ -71,7 +71,7 @@ const ReviewList = ({ productId }) => {
             );
 
             setReviews(reviews.map(review => review.id === id ? { ...review, content: editedContent, rating: editedRating } : review));
-            setEditingReviewId(null); 
+            setEditingReviewId(null);
         } catch (error) {
             console.error("Error updating review:", error.response.data || error);
             setError("Failed to update review");
