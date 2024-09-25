@@ -1,7 +1,7 @@
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Login from './login';
-import LogoutButton from './logout';
+import LogoutButton from './Logout';
 
 function Navigation() {
   return (
