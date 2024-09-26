@@ -9,6 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import Navigation from './components/NavBar';
 import { AuthProvider } from './context/AuthContext';
+import './assets/styles/global.css';
 
 
 import { login, register, logout } from './services/auth';
