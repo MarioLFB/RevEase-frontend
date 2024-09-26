@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useContext } from 'react';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Login from './login';
 import LogoutButton from './Logout';
+import { AuthContext } from '../context/AuthContext'; 
 
 function Navigation() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('token'));
+  const { user, loading } = useContext(AuthContext);
 
-  useEffect(() => {
-    setIsAuthenticated(!!localStorage.getItem('token'));
-  }, []);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Navbar className="bg-body-tertiary">
@@ -17,10 +18,10 @@ function Navigation() {
         <Navbar.Brand href="#home">
           React Bootstrap
         </Navbar.Brand>
-        {isAuthenticated ? (
-          <LogoutButton setIsAuthenticated={setIsAuthenticated} />
+        {user ? ( 
+          <LogoutButton />
         ) : (
-          <Login setIsAuthenticated={setIsAuthenticated} />
+          <Login />
         )}
       </Container>
     </Navbar>

@@ -1,34 +1,14 @@
-import React, { useEffect } from "react";
-import { login } from "../services/auth";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-const Login = ({ setIsAuthenticated }) => {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [error, setError] = React.useState(null);
+const Login = () => {
+  const { login, error } = useContext(AuthContext); 
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem("username");
-    const storedToken = localStorage.getItem("token");
-
-    if (storedUsername && storedToken) {
-      setIsAuthenticated(true);
-    }
-  }, [setIsAuthenticated]);
-
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    try {
-      const data = await login(username, password);
-
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("username", username);
-
-      setIsAuthenticated(true);
-      setError(null);
-    } catch (error) {
-      console.error("Error logging in:", error);
-      setError("Error logging in. Check your credentials.");
-    }
+    login(username, password); 
   };
 
   return (
