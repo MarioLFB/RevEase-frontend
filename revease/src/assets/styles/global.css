@@ -5,7 +5,9 @@
   }
 
   body {
-    line-height: 1.6;
-    background-color: #f4f4f4; /* Cor de fundo padrão */
-    color: #333;               /* Cor de texto padrão */
+    background: radial-gradient(circle, #cceeff 0%, #ffffff 80%);
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
   }
