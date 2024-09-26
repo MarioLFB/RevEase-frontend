@@ -1,15 +1,38 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
-import { AuthContext } from '../context/AuthContext';
+import { AuthContext } from '../context/AuthContext'; 
 
-const ReviewList = ({ productId, reviews }) => {
+const ReviewList = ({ productId }) => {
+    const [reviews, setReviews] = useState([]);  
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [editingReviewId, setEditingReviewId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
     const [editedRating, setEditedRating] = useState(1);
-    const [error, setError] = useState(null);
 
-    const { user, token } = useContext(AuthContext);
+    const { user, token } = useContext(AuthContext);  
 
+   
+    const fetchReviews = async () => {
+        try {
+            const response = await axios.get("http://127.0.0.1:8000/api/reviews/", {
+                params: { product: productId }
+            });
+            const filteredReviews = response.data.results.filter(review => review.product === productId);
+            setReviews(filteredReviews);  
+            setLoading(false);
+        } catch (error) {
+            console.error("Error fetching reviews:", error);
+            setError('Failed to load reviews');
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchReviews(); 
+    }, [productId]);
+
+   
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://127.0.0.1:8000/api/reviews/${id}/`, {
@@ -18,18 +41,20 @@ const ReviewList = ({ productId, reviews }) => {
                 },
             });
 
-            const updatedReviews = reviews.filter((review) => review.id !== id);
-            setReviews(updatedReviews);
+            
+            setReviews(reviews.filter((review) => review.id !== id));
         } catch (error) {
             console.error("Error deleting review:", error);
         }
     };
+
 
     const handleEdit = (review) => {
         setEditingReviewId(review.id);
         setEditedContent(review.content);
         setEditedRating(review.rating);
     };
+
 
     const handleUpdate = async (id) => {
         try {
@@ -44,16 +69,20 @@ const ReviewList = ({ productId, reviews }) => {
                 }
             );
 
+    
             const updatedReviews = reviews.map((review) =>
                 review.id === id ? { ...review, content: editedContent, rating: editedRating } : review
             );
-            setReviews(updatedReviews);
-            setEditingReviewId(null);
+            setReviews(updatedReviews);  
+            setEditingReviewId(null);    
         } catch (error) {
             console.error("Error updating review:", error);
             setError("Failed to update review");
         }
     };
+
+    if (loading) return <p>Loading reviews...</p>;
+    if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
         <div>
