@@ -9,6 +9,7 @@ const ProductDetails = () => {
   const { id } = useParams();  
   const [product, setProduct] = useState(null);
   const [reviews, setReviews] = useState([]); 
+  const [hasReview, setHasReview] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
@@ -35,6 +36,10 @@ const ProductDetails = () => {
         params: { product: id }
       });
       setReviews(response.data.results);
+
+
+      const userReview = response.data.results.find(review => review.author === user);
+      setHasReview(!!userReview);
     } catch (error) {
       console.error('Error fetching reviews:', error);
     }
@@ -53,6 +58,7 @@ const ProductDetails = () => {
       });
 
       setReviews(reviews.filter((review) => review.id !== reviewId));
+      setHasReview(false); 
     } catch (error) {
       console.error('Error deleting review:', error);
     }
@@ -90,7 +96,7 @@ const ProductDetails = () => {
       <p><strong>Category:</strong> {product.category}</p>
       <p><strong>Price:</strong> {product.price}</p>
 
-      {user && <ReviewForm productId={product.id} fetchReviews={fetchReviews} />}
+      {user && !hasReview && <ReviewForm productId={product.id} fetchReviews={fetchReviews} />}
       <ReviewList 
         reviews={reviews} 
         onDelete={handleDeleteReview} 
