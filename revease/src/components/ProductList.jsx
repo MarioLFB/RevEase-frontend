@@ -6,7 +6,7 @@ const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState(null);
 
   const fetchAllProducts = async () => {
     let url = 'http://127.0.0.1:8000/api/products/';
@@ -31,12 +31,13 @@ const ProductList = () => {
     fetchAllProducts();
   }, []);
 
-
   const handleCategoryClick = (category) => {
-    setSelectedCategory(selectedCategory === category ? '' : category);
+    setSelectedCategory(selectedCategory === category ? null : category);
   };
 
-  const filteredProducts = products.filter(product => product.category === selectedCategory);
+  const filteredProducts = selectedCategory
+    ? products.filter(product => product.category === selectedCategory)
+    : [];
 
   const uniqueCategories = [...new Set(products.map(product => product.category))];
 

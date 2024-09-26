@@ -1,42 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from '../context/AuthContext';
 
-const ReviewList = ({ productId }) => {
-    const [reviews, setReviews] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+const ReviewList = ({ productId, reviews }) => {
     const [editingReviewId, setEditingReviewId] = useState(null);
     const [editedContent, setEditedContent] = useState("");
     const [editedRating, setEditedRating] = useState(1);
+    const [error, setError] = useState(null);
 
-    const isAuthenticated = !!localStorage.getItem("token");
-    const username = localStorage.getItem("username");
-
-    useEffect(() => {
-        const fetchReviews = async () => {
-            try {
-                const response = await axios.get("http://127.0.0.1:8000/api/reviews/");
-                const filteredReviews = response.data.results.filter(review => review.product === productId);
-                setReviews(filteredReviews);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching reviews:", error);
-                setError('Failed to load reviews');
-                setLoading(false);
-            }
-        };
-
-        fetchReviews();
-    }, [productId]);
+    const { user, token } = useContext(AuthContext);
 
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://127.0.0.1:8000/api/reviews/${id}/`, {
                 headers: {
-                    Authorization: `Token ${localStorage.getItem("token")}`,
+                    Authorization: `Token ${token}`,
                 },
             });
-            window.location.reload();
+
+            const updatedReviews = reviews.filter((review) => review.id !== id);
+            setReviews(updatedReviews);
         } catch (error) {
             console.error("Error deleting review:", error);
         }
@@ -50,39 +33,27 @@ const ReviewList = ({ productId }) => {
 
     const handleUpdate = async (id) => {
         try {
-            const token = localStorage.getItem("token");
-            if (!token) {
-                setError("User not authenticated");
-                return;
-            }
-
-            const config = {
-                headers: {
-                    Authorization: `Token ${token}`,
-                    'Content-Type': 'application/json',
-                },
-            };
-
             await axios.put(
                 `http://127.0.0.1:8000/api/reviews/${id}/`,
+                { product: productId, content: editedContent, rating: editedRating },
                 {
-                    product: productId,
-                    content: editedContent,
-                    rating: editedRating,
-                },
-                config
+                    headers: {
+                        Authorization: `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                }
             );
 
-            setReviews(reviews.map(review => review.id === id ? { ...review, content: editedContent, rating: editedRating } : review));
+            const updatedReviews = reviews.map((review) =>
+                review.id === id ? { ...review, content: editedContent, rating: editedRating } : review
+            );
+            setReviews(updatedReviews);
             setEditingReviewId(null);
         } catch (error) {
-            console.error("Error updating review:", error.response.data || error);
+            console.error("Error updating review:", error);
             setError("Failed to update review");
         }
     };
-
-    if (loading) return <p>Loading reviews...</p>;
-    if (error) return <p style={{ color: "red" }}>{error}</p>;
 
     return (
         <div>
@@ -115,7 +86,7 @@ const ReviewList = ({ productId }) => {
                                     <p><strong>Author:</strong> {review.author}</p>
                                     <p>{review.content}</p>
                                     
-                                    {isAuthenticated && review.author === username && (
+                                    {user && review.author === user && (
                                         <div>
                                             <button onClick={() => handleEdit(review)}>Edit</button>
                                             <button onClick={() => handleDelete(review.id)}>Delete</button>

@@ -1,20 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { AuthContext } from '../context/AuthContext';
 
-const ReviewForm = ({ productId, setReviews }) => {
+const ReviewForm = ({ productId, fetchReviews }) => {
     const [content, setContent] = useState("");
     const [rating, setRating] = useState(1);
     const [error, setError] = useState(null);
     const [hasReview, setHasReview] = useState(false);
 
-    const isAuthenticated = !!localStorage.getItem("token");
+    const { user, token } = useContext(AuthContext);
 
     useEffect(() => {
-        if (!isAuthenticated) return;
+        if (!user) return;
 
         const checkUserReview = async () => {
-            const token = localStorage.getItem("token");
-
             try {
                 const config = {
                     headers: {
@@ -24,7 +23,7 @@ const ReviewForm = ({ productId, setReviews }) => {
 
                 const response = await axios.get("http://127.0.0.1:8000/api/reviews/", config);
                 const userReview = response.data.results.find(
-                    (review) => review.product === productId && review.author === localStorage.getItem("username")
+                    (review) => review.product === productId && review.author === user
                 );
                 if (userReview) {
                     setHasReview(true);
@@ -36,12 +35,10 @@ const ReviewForm = ({ productId, setReviews }) => {
         };
 
         checkUserReview();
-    }, [productId, isAuthenticated]);
+    }, [productId, user, token]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        const token = localStorage.getItem("token");
 
         if (!token) {
             setError("User not authenticated");
@@ -57,11 +54,7 @@ const ReviewForm = ({ productId, setReviews }) => {
 
             await axios.post(
                 "http://127.0.0.1:8000/api/reviews/",
-                {
-                    product: productId,
-                    content,
-                    rating,
-                },
+                { product: productId, content, rating },
                 config
             );
 
@@ -70,15 +63,15 @@ const ReviewForm = ({ productId, setReviews }) => {
             setError(null);
             setHasReview(true);
 
-            window.location.reload();
+            fetchReviews();
 
         } catch (error) {
-            console.error("Error submitting review:", error.response.data);
+            console.error("Error submitting review:", error);
             setError(error.response ? error.response.data : "An error occurred");
         }
     };
 
-    if (!isAuthenticated) {
+    if (!user) {
         return <p>You need to be logged in to submit a review.</p>;
     }
 
@@ -89,9 +82,7 @@ const ReviewForm = ({ productId, setReviews }) => {
     return (
         <form onSubmit={handleSubmit}>
             <h3>Leave a Review</h3>
-
-            {error && <p style={{ color: "red" }}>{error.detail || "Something went wrong"}</p>}
-
+            {error && <p style={{ color: "red" }}>{error}</p>}
             <div>
                 <label>Review</label>
                 <textarea
