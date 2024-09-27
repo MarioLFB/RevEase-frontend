@@ -20,7 +20,7 @@ function Navigation() {
     <Navbar expand="lg" className="navbar-transparent shadow-sm">
       <Container>
         <Navbar.Brand href="#home" className="fw-bold fs-4">
-          MyApp
+          REVease
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbar-nav" />
         <Navbar.Collapse id="navbar-nav">
