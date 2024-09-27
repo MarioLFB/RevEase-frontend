@@ -1,0 +1,30 @@
+/* src/assets/styles/components/ReviewForm.css */
+
+.review-form {
+    max-width: 600px;
+    margin: 20px auto;
+    display: block;
+    visibility: visible;
+    opacity: 1; /* Define a opacidade inicial */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Transições para suavizar alterações */
+}
+
+/* Classe auxiliar para ocultar o formulário temporariamente */
+.review-form.hidden {
+    opacity: 0; /* Define a opacidade para zero para ocultar */
+    transform: translateY(10px); /* Move o formulário ligeiramente para baixo */
+    pointer-events: none; /* Desativa interações para evitar cliques */
+}
+
+/* Classe para reexibir o formulário */
+.review-form.visible {
+    opacity: 1; /* Retorna a opacidade para visível */
+    transform: translateY(0); /* Reseta o posicionamento */
+    pointer-events: auto; /* Reativa interações */
+}
+
+/* Estilo para mensagem de erro */
+.review-form p {
+    text-align: center;
+    color: red;
+}

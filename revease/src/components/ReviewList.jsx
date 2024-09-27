@@ -24,16 +24,18 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
     }
 
     return (
-        <div>
-            <h3>Product Reviews</h3>
-            <ul>
+        <div className="container mt-4">
+            <h3 className="text-center mb-4">Product Reviews</h3>
+            <ul className="list-group">
                 {reviews.map((review) => (
-                    <li key={review.id}>
+                    <li key={review.id} className="list-group-item mb-3">
                         {editingReviewId === review.id ? (
-                            <div>
-                                <textarea 
-                                    value={editedContent} 
-                                    onChange={(e) => setEditedContent(e.target.value)} 
+                            <div className="mb-3">
+                                <textarea
+                                    value={editedContent}
+                                    onChange={(e) => setEditedContent(e.target.value)}
+                                    className="form-control mb-2"
+                                    rows="3"
                                 />
                                 <input
                                     type="number"
@@ -41,9 +43,16 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
                                     min="1"
                                     max="5"
                                     onChange={(e) => setEditedRating(e.target.value)}
+                                    className="form-control mb-2"
                                 />
-                                <button onClick={handleUpdate}>Update</button>
-                                <button onClick={() => setEditingReviewId(null)}>Cancel</button>
+                                <div className="d-flex justify-content-end">
+                                    <button onClick={handleUpdate} className="btn btn-success me-2">
+                                        Update
+                                    </button>
+                                    <button onClick={() => setEditingReviewId(null)} className="btn btn-secondary">
+                                        Cancel
+                                    </button>
+                                </div>
                             </div>
                         ) : (
                             <div>
@@ -51,9 +60,13 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
                                 <p><strong>Author:</strong> {review.author}</p>
                                 <p>{review.content}</p>
                                 {user && review.author === user && (
-                                    <div>
-                                        <button onClick={() => handleEdit(review)}>Edit</button>
-                                        <button onClick={() => onDelete(review.id)}>Delete</button>
+                                    <div className="d-flex justify-content-end mt-2">
+                                        <button onClick={() => handleEdit(review)} className="btn btn-warning me-2">
+                                            Edit
+                                        </button>
+                                        <button onClick={() => onDelete(review.id)} className="btn btn-danger">
+                                            Delete
+                                        </button>
                                     </div>
                                 )}
                             </div>
