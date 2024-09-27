@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from '../context/AuthContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ReviewForm = ({ productId, fetchReviews }) => {
     const [content, setContent] = useState("");
@@ -72,39 +73,42 @@ const ReviewForm = ({ productId, fetchReviews }) => {
     };
 
     if (!user) {
-        return <p>You need to be logged in to submit a review.</p>;
+        return <p className="text-center text-muted">You need to be logged in to submit a review.</p>;
     }
 
     if (hasReview) {
-        return <p>Only one review allowed per user.</p>;
+        return <p className="text-center text-muted">Only one review allowed per user.</p>;
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <div>
-                <label>Review</label>
+        <form onSubmit={handleSubmit} className="text-center mt-4">
+            {error && <p className="text-danger">{error}</p>}
+
+            <div className="form-group mb-3">
+                <label className="form-label lead">Review</label>
                 <textarea
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     rows="4"
+                    className="form-control w-50 mx-auto"
                     required
                 />
             </div>
 
-            <div>
-                <label>Rating</label>
+            <div className="form-group mb-3">
+                <label className="form-label lead">Rating</label>
                 <input
                     type="number"
                     value={rating}
                     onChange={(e) => setRating(e.target.value)}
                     min="1"
                     max="5"
+                    className="form-control w-25 mx-auto"
                     required
                 />
             </div>
 
-            <button type="submit">Submit</button>
+            <button type="submit" className="btn btn-primary btn-lg">Submit</button>
         </form>
     );
 };
