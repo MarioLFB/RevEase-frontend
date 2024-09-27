@@ -20,7 +20,7 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
     };
 
     if (reviews.length === 0) {
-        return <p>No reviews yet for this product.</p>;
+        return <p className="text-center text-muted">No reviews yet for this product.</p>;
     }
 
     return (
@@ -56,9 +56,20 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
                             </div>
                         ) : (
                             <div>
-                                <p><strong>Rating:</strong> {review.rating}/5</p>
-                                <p><strong>Author:</strong> {review.author}</p>
-                                <p>{review.content}</p>
+                                {/* Estilo para o Rating */}
+                                <p>
+                                    <span className="fw-bold">Rating:</span>{" "}
+                                    <span className="badge bg-primary">{review.rating}/5</span>
+                                </p>
+
+                                {/* Estilo para o Author */}
+                                <p>
+                                    <span className="fw-bold text-primary">Author:</span> {review.author}
+                                </p>
+
+                                {/* Estilo para o conteúdo do review */}
+                                <p className="text-muted">{review.content}</p>
+
                                 {user && review.author === user && (
                                     <div className="d-flex justify-content-end mt-2">
                                         <button onClick={() => handleEdit(review)} className="btn btn-warning me-2">
