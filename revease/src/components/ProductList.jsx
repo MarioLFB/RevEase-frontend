@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
+import { Button, Container, Row, Col } from 'react-bootstrap';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
@@ -45,29 +46,48 @@ const ProductList = () => {
   if (error) return <p>{error}</p>;
 
   return (
-    <div>
-      {uniqueCategories.map((category, index) => (
-        <button key={index} onClick={() => handleCategoryClick(category)}>
-          {category}
-        </button>
-      ))}
+    <Container className="my-5">
+      <h2 className="text-center mb-4">Product Categories</h2>
+      
+      <div className="text-center mb-4">
+        {uniqueCategories.map((category, index) => (
+          <Button
+            key={index} 
+            onClick={() => handleCategoryClick(category)} 
+            variant={selectedCategory === category ? "primary" : "outline-primary"}
+            className="m-2"
+          >
+            {category}
+          </Button>
+        ))}
+      </div>
 
       {selectedCategory && (
         <div>
           {filteredProducts.length === 0 ? (
             <p>No products found for this category.</p>
           ) : (
-            <ul>
+            <Row>
               {filteredProducts.map(product => (
-                <li key={product.id}>
-                  <Link to={`/product/${product.id}`}>{product.name}</Link> 
-                </li>
+                <Col md={4} key={product.id} className="mb-4">
+                  <div className="card">
+                    <div className="card-body">
+                      <h5 className="card-title">{product.name}</h5>
+                      <p className="card-text">
+                        {product.description ? product.description : 'No description available.'}
+                      </p>
+                      <Link to={`/product/${product.id}`} className="btn btn-primary">
+                        View Product
+                      </Link>
+                    </div>
+                  </div>
+                </Col>
               ))}
-            </ul>
+            </Row>
           )}
         </div>
       )}
-    </div>
+    </Container>
   );
 };
 
