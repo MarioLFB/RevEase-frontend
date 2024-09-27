@@ -81,7 +81,6 @@ const ReviewForm = ({ productId, fetchReviews }) => {
 
     return (
         <form onSubmit={handleSubmit}>
-            <h3>Leave a Review</h3>
             {error && <p style={{ color: "red" }}>{error}</p>}
             <div>
                 <label>Review</label>

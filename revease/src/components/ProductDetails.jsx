@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import ReviewForm from './ReviewForm';
 import ReviewList from './ReviewList';
 import { AuthContext } from '../context/AuthContext';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ProductDetails = () => {
   const { id } = useParams();  
@@ -36,7 +37,6 @@ const ProductDetails = () => {
         params: { product: id }
       });
       setReviews(response.data.results);
-
 
       const userReview = response.data.results.find(review => review.author === user);
       setHasReview(!!userReview);
@@ -85,23 +85,40 @@ const ProductDetails = () => {
     }
   };
 
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p>{error}</p>;
-  if (!product) return <p>No product found.</p>;
+  if (loading) return <p className="text-center text-muted">Loading...</p>;
+  if (error) return <p className="text-center text-danger">{error}</p>;
+  if (!product) return <p className="text-center text-muted">No product found.</p>;
 
   return (
-    <div>
-      <h1>{product.name}</h1>
-      <p><strong>Description:</strong> {product.description}</p>
-      <p><strong>Category:</strong> {product.category}</p>
-      <p><strong>Price:</strong> {product.price}</p>
+    <div className="container mt-5">
+      <div className="card mb-4 p-4 shadow-sm text-center">
+        <h1 className="card-title display-4 mb-3">{product.name}</h1>
+        <p className="card-text lead">
+          <strong>Description:</strong> {product.description}
+        </p>
+        <p className="card-text lead">
+          <strong>Category:</strong> {product.category}
+        </p>
+        <p className="card-text lead">
+          <strong>Price:</strong> ${product.price}
+        </p>
+      </div>
 
-      {user && !hasReview && <ReviewForm productId={product.id} fetchReviews={fetchReviews} />}
-      <ReviewList 
-        reviews={reviews} 
-        onDelete={handleDeleteReview} 
-        onUpdate={handleUpdateReview} 
-      />
+      {user && !hasReview && (
+        <div className="card mb-4 p-4 shadow-sm text-center">
+          <h3 className="card-title mb-4">Leave a Review</h3>
+          <ReviewForm productId={product.id} fetchReviews={fetchReviews} />
+        </div>
+      )}
+
+      <div className="card mb-4 p-4 shadow-sm text-center">
+        <h3 className="card-title mb-4">Reviews</h3>
+        <ReviewList 
+          reviews={reviews} 
+          onDelete={handleDeleteReview} 
+          onUpdate={handleUpdateReview} 
+        />
+      </div>
     </div>
   );
 };
