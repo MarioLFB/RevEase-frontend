@@ -56,18 +56,15 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
                             </div>
                         ) : (
                             <div>
-                                {/* Estilo para o Rating */}
                                 <p>
                                     <span className="fw-bold">Rating:</span>{" "}
                                     <span className="badge bg-primary">{review.rating}/5</span>
                                 </p>
 
-                                {/* Estilo para o Author */}
                                 <p>
                                     <span className="fw-bold text-primary">Author:</span> {review.author}
                                 </p>
 
-                                {/* Estilo para o conteúdo do review */}
                                 <p className="text-muted">{review.content}</p>
 
                                 {user && review.author === user && (
