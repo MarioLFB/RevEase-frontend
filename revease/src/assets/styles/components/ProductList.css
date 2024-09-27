@@ -1,0 +1,14 @@
+
+.product-card {
+  min-height: 250px; 
+  display: flex;
+  flex-direction: column;
+}
+
+.product-card .card-body {
+  flex: 1; 
+}
+
+.product-card .btn-primary {
+  align-self: center;
+}
