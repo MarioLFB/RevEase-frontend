@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from '../context/AuthContext';
+import Like from "./Like";
 
 const ReviewList = ({ reviews, onDelete, onUpdate }) => { 
     const [editingReviewId, setEditingReviewId] = useState(null);
@@ -24,65 +25,66 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
     }
 
     return (
-        <div className="container mt-4">
-            <h3 className="text-center mb-4">Product Reviews</h3>
-            <ul className="list-group">
-                {reviews.map((review) => (
-                    <li key={review.id} className="list-group-item mb-3">
-                        {editingReviewId === review.id ? (
-                            <div className="mb-3">
-                                <textarea
-                                    value={editedContent}
-                                    onChange={(e) => setEditedContent(e.target.value)}
-                                    className="form-control mb-2"
-                                    rows="3"
-                                />
-                                <input
-                                    type="number"
-                                    value={editedRating}
-                                    min="1"
-                                    max="5"
-                                    onChange={(e) => setEditedRating(e.target.value)}
-                                    className="form-control mb-2"
-                                />
-                                <div className="d-flex justify-content-end">
-                                    <button onClick={handleUpdate} className="btn btn-success me-2">
-                                        Update
-                                    </button>
-                                    <button onClick={() => setEditingReviewId(null)} className="btn btn-secondary">
-                                        Cancel
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div>
-                                <p>
-                                    <span className="fw-bold">Rating:</span>{" "}
-                                    <span className="badge bg-primary">{review.rating}/5</span>
-                                </p>
+<div className="container mt-4">
+    <h3 className="text-center mb-4">Product Reviews</h3>
+    <ul className="list-group">
+      {reviews.map((review) => (
+        <li key={review.id} className="list-group-item mb-3">
+          <Like reviewId={review.id} />
+          {editingReviewId === review.id ? (
+            <div className="mb-3">
+              <textarea
+                value={editedContent}
+                onChange={(e) => setEditedContent(e.target.value)}
+                className="form-control mb-2"
+                rows="3"
+              />
+              <input
+                type="number"
+                value={editedRating}
+                min="1"
+                max="5"
+                onChange={(e) => setEditedRating(e.target.value)}
+                className="form-control mb-2"
+              />
+              <div className="d-flex justify-content-end">
+                <button onClick={handleUpdate} className="btn btn-success me-2">
+                  Update
+                </button>
+                <button onClick={() => setEditingReviewId(null)} className="btn btn-secondary">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div>
+              <p>
+                <span className="fw-bold">Rating:</span>{" "}
+                <span className="badge bg-primary">{review.rating}/5</span>
+              </p>
 
-                                <p>
-                                    <span className="fw-bold text-primary">Author:</span> {review.author}
-                                </p>
+              <p>
+                <span className="fw-bold text-primary">Author:</span> {review.author}
+              </p>
 
-                                <p className="text-muted">{review.content}</p>
+              <p className="text-muted">{review.content}</p>
 
-                                {user && review.author === user && (
-                                    <div className="d-flex justify-content-end mt-2">
-                                        <button onClick={() => handleEdit(review)} className="btn btn-warning me-2">
-                                            Edit
-                                        </button>
-                                        <button onClick={() => onDelete(review.id)} className="btn btn-danger">
-                                            Delete
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                        )}
-                    </li>
-                ))}
-            </ul>
-        </div>
+              {user && review.author === user && (
+                <div className="d-flex justify-content-end mt-2">
+                  <button onClick={() => handleEdit(review)} className="btn btn-warning me-2">
+                    Edit
+                  </button>
+                  <button onClick={() => onDelete(review.id)} className="btn btn-danger">
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </li>
+      ))}
+    </ul>
+  </div>
     );
 };
 
