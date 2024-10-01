@@ -1,4 +1,3 @@
-// Like.jsx
 import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
@@ -13,16 +12,25 @@ const Like = ({ reviewId }) => {
 
   useEffect(() => {
     const fetchLikes = async () => {
+      if (!token) {
+        setError('You need to be logged in to view likes.');
+        setIsLoading(false);
+        return;
+      }
+
       try {
         const countResponse = await axios.get(
           'http://127.0.0.1:8000/api/likes/count/',
           {
             params: { review: reviewId },
+            headers: {
+              Authorization: `Token ${token}`,
+            },
           }
         );
         setLikes(countResponse.data.count);
 
-        if (user && user.id && token) {
+        if (user && user.id) {
           const likeCheckResponse = await axios.get(
             'http://127.0.0.1:8000/api/likes/',
             {
@@ -42,11 +50,12 @@ const Like = ({ reviewId }) => {
           }
         }
       } catch (error) {
-        console.error('Error fetching likes:', error);
-        if (error.response) {
-          console.error('Server responded with:', error.response.data);
+        if (error.response && error.response.status === 401) {
+          setError('Unauthorized access. Please log in again.');
+        } else {
+          setError('Error loading likes.');
         }
-        setError('Erro ao carregar likes.');
+        console.error('Error fetching likes:', error);
       } finally {
         setIsLoading(false);
       }
@@ -55,7 +64,6 @@ const Like = ({ reviewId }) => {
     if (reviewId) {
       fetchLikes();
     } else {
-      console.error('ID Review not defined.');
       setError('Review not found.');
       setIsLoading(false);
     }
@@ -63,12 +71,11 @@ const Like = ({ reviewId }) => {
 
   const handleLike = async () => {
     if (!token) {
-      setError('You need to be logged in to enjoy.');
+      setError('You need to be logged in to like this review.');
       return;
     }
 
     try {
-      console.log('Enviando reviewId:', reviewId);
       if (liked && likeId) {
         await axios.delete(
           `http://127.0.0.1:8000/api/likes/${likeId}/`,
@@ -96,17 +103,8 @@ const Like = ({ reviewId }) => {
         setLikeId(response.data.id);
       }
     } catch (error) {
-      console.error('Error posting like:', error);
-      if (error.response) {
-        console.error('Server responded with:', error.response.data);
-        if (
-          error.response.status === 400 &&
-          error.response.data.detail === 'You already liked this review.'
-        ) {
-          setLiked(true);
-        }
-      }
-      setError('Error while liking/disliking.');
+      setError('Error while liking/disliking. Please try again.');
+      console.error('Error when enjoying the review:', error);
     }
   };
 
