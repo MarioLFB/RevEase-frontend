@@ -5,6 +5,7 @@ import ReviewForm from './ReviewForm';
 import ReviewList from './ReviewList';
 import { AuthContext } from '../context/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CommentSection from './CommentSection';
 
 const ProductDetails = () => {
   const { id } = useParams();  
@@ -119,6 +120,11 @@ const ProductDetails = () => {
           onUpdate={handleUpdateReview} 
         />
       </div>
+      {reviews.length > 0 && reviews.map((review) => (
+        <div key={review.id} className="mb-4">
+          <CommentSection reviewId={review.id} />
+        </div>
+      ))}
     </div>
   );
 };
