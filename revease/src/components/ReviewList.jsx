@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from '../context/AuthContext';
-import Like from "./Like";
+
 
 const ReviewList = ({ reviews, onDelete, onUpdate }) => { 
     const [editingReviewId, setEditingReviewId] = useState(null);
@@ -30,7 +30,6 @@ const ReviewList = ({ reviews, onDelete, onUpdate }) => {
     <ul className="list-group">
       {reviews.map((review) => (
         <li key={review.id} className="list-group-item mb-3">
-          <Like reviewId={review.id} />
           {editingReviewId === review.id ? (
             <div className="mb-3">
               <textarea
