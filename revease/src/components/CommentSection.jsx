@@ -3,6 +3,18 @@ import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '/src/assets/styles/components/CommentSection.css';
+
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const today = new Date();
+  const diffTime = Math.abs(today - date);
+  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays === 0) return 'Today';
+  if (diffDays === 1) return '1 day ago';
+  return `${diffDays} days ago`;
+};
 
 const CommentSection = ({ reviewId }) => {
   const { user, token } = useContext(AuthContext);
@@ -111,7 +123,7 @@ const CommentSection = ({ reviewId }) => {
       ) : (
         <ul className="list-group mb-4">
           {comments.map((comment) => (
-            <li key={comment.id} className="list-group-item d-flex justify-content-between align-items-center">
+            <li key={comment.id} className="list-group-item comment-container">
               {editCommentId === comment.id ? (
                 <form className="w-100" onSubmit={handleEditComment}>
                   <div className="form-group">
@@ -133,27 +145,33 @@ const CommentSection = ({ reviewId }) => {
                   </div>
                 </form>
               ) : (
-                <>
-                  <div>
-                    <strong>{comment.author}</strong>: {comment.content}
+                <div className="w-100">
+                  <div className="comment-header">Reply from {comment.author}</div>
+                  <div className="comment-content">
+                    {comment.content}
                   </div>
-                  {comment.author === user && (
-                    <div>
-                      <button
-                        className="btn btn-warning btn-sm me-2"
-                        onClick={() => handleEditClick(comment.id, comment.content)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-danger btn-sm"
-                        onClick={() => handleDeleteComment(comment.id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </>
+                  <div className="comment-footer">
+                    <span className="comment-date">
+                      {formatDate(comment.created_at)}
+                    </span>
+                    {comment.author === user && (
+                      <div>
+                        <button
+                          className="btn btn-warning btn-sm me-2"
+                          onClick={() => handleEditClick(comment.id, comment.content)}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDeleteComment(comment.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
               )}
             </li>
           ))}
