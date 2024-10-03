@@ -120,11 +120,11 @@ const ProductDetails = () => {
           onUpdate={handleUpdateReview} 
         />
       </div>
-      {reviews.length > 0 && reviews.map((review) => (
-        <div key={review.id} className="mb-4">
-          <CommentSection reviewId={review.id} />
+      {reviews.length > 0 && (
+        <div className="mb-4">
+          <CommentSection reviewId={reviews[0].id} />
         </div>
-      ))}
+      )}
     </div>
   );
 };
